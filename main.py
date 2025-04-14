@@ -151,7 +151,7 @@ class Download_file(QWidget):
             self.f = self.a
 
 
-    def Statistic_stu(self):
+        def Statistic_stu(self):
         check_list_name = []
         for i in range(self.list_widget.count()):
             item = self.list_widget.item(i)
@@ -166,14 +166,21 @@ class Download_file(QWidget):
                     score = score + 1
             list_score.append(score)
             score = 0
-        fig = plt.figure(figsize=(6, 4))
-        ax = fig.add_subplot()
+        #fig = plt.figure(figsize=(6, 4))
+
+        f, ax = plt.subplots(2,2)
+        #f.set_size_inches(8,8)
 
         x = check_list_name
         y = list_score
 
-        ax.barh(x, y)
-        ax.grid()
+        ax[0,0].barh(x, y)
+        ax[0,0].grid()
+
+        ax[0,0].set_title("График посещаемости студента платформы Мудл")
+        ax[0,0].set_xlabel("Колличество входов")
+        ax[0,0].set_ylabel("45")
+
 
         plt.show()
 
