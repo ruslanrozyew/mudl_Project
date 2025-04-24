@@ -205,8 +205,8 @@ class Download_file(QWidget):
 
         ax[1, 0].set_visible(False) # скрыли с видимости график ax[1, 0]
         plt.show()
-        print(list_score_1)
-        print(type_lesson)
+        #print(list_score_1)
+        #print(type_lesson)
 
 
     def Button_backk(self):
