@@ -151,7 +151,7 @@ class Download_file(QWidget):
             self.f = self.a
 
 
-        def Statistic_stu(self):
+    def Statistic_stu(self):
         check_list_name = []
         for i in range(self.list_widget.count()):
             item = self.list_widget.item(i)
