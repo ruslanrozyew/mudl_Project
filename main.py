@@ -7,8 +7,6 @@ from PyQt6.QtGui import QPixmap
 import matplotlib.pyplot as plt
 from PyQt6.QtCore import Qt
 
-
-
 def list_directory_contents(directory):
     login = []
     #print(f"Содержимое папки '{directory}':")
@@ -22,9 +20,8 @@ def list_directory_contents(directory):
             if item[0] == "L":
                 login.append(item)
     return login
-
 # указываем директорию папки проекта с файлами
-login_list = list_directory_contents("C:\Проект Мудл")
+login_list = list_directory_contents("C:\\moodle project")
 # print(login_list)
 
 
@@ -45,9 +42,8 @@ class MainWindow(QMainWindow):
         # Опционально: масштабируем изображение под размер виджета
         self.label.setScaledContents(True)
 
-        pixmap = QPixmap("C:\Проект Мудл\лого")
+        pixmap = QPixmap("C:\\moodle project\лого")
         self.label.setPixmap(pixmap)
-
 
         self.Button_file = QPushButton(self.centralwidget)
         self.Button_file.setGeometry(250, 200, 300, 100)
@@ -84,8 +80,6 @@ class MainWindow(QMainWindow):
         if self.Check_student is None or not self.Check_student.isVisible():
             self.Check_student = Filtared_file()
             self.Check_student.show()
-
-
 
 
 # открытие окна при нажатие на кнопку Загрузить файл
@@ -152,41 +146,67 @@ class Download_file(QWidget):
 
 
     def Statistic_stu(self):
-        check_list_name = []
+        # График посешаемости студентами платформы Мудл
+        check_list_name = []       # для превого графика
+        check_list_name_surname = []      # для превого графика
+        type_lesson = []  # для второго графика
         for i in range(self.list_widget.count()):
             item = self.list_widget.item(i)
             if item.checkState() == Qt.CheckState.Checked:
                 check_list_name.append(item.text())
         check_list = sorted(check_list_name)
-        score = 0
-        list_score = []
+        score = 0    # для превого графика
+        list_score = []    # для превого графика
         for name in check_list_name:
             for i in self.file_list:
                 if name == i[2]:
                     score = score + 1
+                type_lesson.append(i[4])
+
             list_score.append(score)
             score = 0
-        #fig = plt.figure(figsize=(6, 4))
+        score = 0
+        surname = ''
+        for name_1 in check_list_name:
+            for letter in name_1[::-1]:
+                if letter != " ":
+                    surname = letter + surname
+                else:
+                    check_list_name_surname.append(surname)
+                    surname = ""
+                    break
 
         f, ax = plt.subplots(2,2)
-        #f.set_size_inches(8,8)
-
-        x = check_list_name
+        f.set_size_inches(10,8)
+        x = check_list_name_surname
         y = list_score
-
-        ax[0,0].barh(x, y)
-        ax[0,0].grid()
-
+        ax[0,0].barh(x, y) ; ax[0,0].grid()
         ax[0,0].set_title("График посещаемости студента платформы Мудл")
         ax[0,0].set_xlabel("Колличество входов")
-        ax[0,0].set_ylabel("45")
+        #ax[0,0].set_ylabel("45")
 
+        # График посешаемости кусов студентами по популярности на платформе Мудл
+        list_score_1 = []
+        type_lesson = set(type_lesson)
+        for type in type_lesson:
+            for i in self.file_list:
+                if type == i[4]:
+                    score = score + 1
+            list_score_1.append(score)
+            score = 0
 
+        type_lesson = list(type_lesson)
+
+        x1 = type_lesson
+        y1 = list_score_1
+        ax[1, 1].set_title("График попудярности курсов")
+        ax[1, 1].barh(x1, y1)
+        ax[1, 1].grid()
+
+        ax[1, 0].set_visible(False) # скрыли с видимости график ax[1, 0]
         plt.show()
-
-        #print(list_score)
-        #print(check_list_name)
-
+        print(list_score_1)
+        print(type_lesson)
 
 
     def Button_backk(self):
@@ -194,7 +214,6 @@ class Download_file(QWidget):
         self.list_widget.addItems(login_list)
         self.label.setText(f"Выбран: {"Ничего не выбранно"}")
         self.a = ""
-
 
     def delete_name(self):
         teachers_list = []  # тут будет список отмеченных названий
@@ -215,10 +234,9 @@ class Download_file(QWidget):
             self.list_widget.addItem(item)  # добавляем элемент в список
 
 
-
     def find_student(self):
         if self.a in login_list :
-            f_input = open(f"C:/Проект Мудл/{self.a}", "r", encoding='utf-8')  # Установка кодировки для русских букв
+            f_input = open(f"C://moodle project/{self.a}", "r", encoding='utf-8')  # Установка кодировки для русских букв
             s = f_input.readline()
             self.file_list = [];
             x = [];
@@ -262,11 +280,6 @@ class Download_file(QWidget):
         print(self.f)
 
 
-
-
-
-
-
 # Открытие окна при нажатие на кнопку Выбрать сткдента
 class Check_student_window(QMainWindow):
     def __init__(self):
@@ -301,8 +314,6 @@ class Filtared_file(QWidget):
         super().__init__()
         self.setWindowTitle("Второе окно")
         self.setGeometry(700, 400, 370, 300)
-
-
 
 
 if __name__ == "__main__":
