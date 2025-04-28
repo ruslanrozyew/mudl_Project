@@ -64,6 +64,12 @@ class MainWindow(QMainWindow):
         self.Button_filter_file.clicked.connect(self.open_second_window_filtared_file)
         self.gownload_file = None  # Храним ссылку на второе окно
 
+        self.spravka = QPushButton(self.centralwidget)
+        self.spravka.setGeometry(0, 450, 100, 50)
+        self.spravka.setText("Справка")
+        self.spravka.clicked.connect(self.open_spravka)
+        self.Check_student = None  # Храним ссылку на второе окно
+
     # Загрузить файл
     def open_second_window_for_gownload_file(self):
         if self.gownload_file is None or not self.gownload_file.isVisible():
@@ -80,6 +86,18 @@ class MainWindow(QMainWindow):
         if self.Check_student is None or not self.Check_student.isVisible():
             self.Check_student = Filtared_file()
             self.Check_student.show()
+
+    def open_spravka(self):
+        if self.Check_student is None or not self.Check_student.isVisible():
+            self.Check_student = Spravka()
+            self.Check_student.show()
+
+class Spravka(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Второе окно")
+        self.setGeometry(700, 400, 370, 300)
+
 
 
 # открытие окна при нажатие на кнопку Загрузить файл
