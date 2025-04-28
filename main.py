@@ -212,7 +212,7 @@ class Download_file(QWidget):
     def Button_backk(self):
         self.list_widget.clear()
         self.list_widget.addItems(login_list)
-        self.label.setText(f"Выбран: {"Ничего не выбранно"}")
+        self.label.setText(f"Выбран: {'Ничего не выбранно'}")
         self.a = ""
 
     def delete_name(self):
