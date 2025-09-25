@@ -1,4 +1,3 @@
-
 import os
 import sys
 import numpy as np
@@ -96,7 +95,15 @@ class Spravka(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Второе окно")
-        self.setGeometry(700, 400, 370, 300)
+        self.setGeometry(575, 400, 600, 300)
+
+        # Создаем текстовую метку
+        self.text_spravka = QLabel("Для работы приложения нужно выполнить следующие шаги: \n"
+                                   "1. Создайте папку в локальном диске С и назовите ее moodle project \n"
+                                   "2. Загрузите файлы логов, скачанные из мудла в папку moodle project, пример файла LogCSV 12,12,25\n"
+                                   "3. Запустите приложение", self)
+        self.text_spravka.move(1, 40)  # Позиция текста
+        self.text_spravka.resize(700, 100)
 
 
 
@@ -222,6 +229,8 @@ class Download_file(QWidget):
         ax[1, 1].grid()
 
         ax[1, 0].set_visible(False) # скрыли с видимости график ax[1, 0]
+
+        plt.savefig('C:/Games/my_sine_plot.pdf')   # сохранение графика в пдф формате в (C:/Games)
         plt.show()
         #print(list_score_1)
         #print(type_lesson)
@@ -256,9 +265,9 @@ class Download_file(QWidget):
         if self.a in login_list :
             f_input = open(f"C://moodle project/{self.a}", "r", encoding='utf-8')  # Установка кодировки для русских букв
             s = f_input.readline()
-            self.file_list = [];
-            x = [];
-            self.student_list = [];
+            self.file_list = []
+            x = []
+            self.student_list = []
             str_elem = ""
             while s != "":
                 s = f_input.readline()
