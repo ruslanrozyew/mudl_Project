@@ -230,7 +230,7 @@ class Download_file(QWidget):
 
         ax[1, 0].set_visible(False) # скрыли с видимости график ax[1, 0]
 
-        plt.savefig('C:/Games/my_sine_plot.pdf')   # сохранение графика в пдф формате в (C:/Games)
+        plt.savefig('C:\moodle project\my_sine_plot.pdf')   # сохранение графика в пдф формате в (C:/Games)
         plt.show()
         #print(list_score_1)
         #print(type_lesson)
