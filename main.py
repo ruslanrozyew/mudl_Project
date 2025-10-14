@@ -206,7 +206,7 @@ class Download_file(QWidget):
         x = check_list_name_surname
         y = list_score
         ax[0,0].barh(x, y) ; ax[0,0].grid()
-        ax[0,0].set_title("График посещаемости студента платформы Мудл")
+        ax[0,0].set_title("График посещаемости студента платформы Moodle")
         ax[0,0].set_xlabel("Колличество входов")
         #ax[0,0].set_ylabel("45")
 
