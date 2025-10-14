@@ -210,6 +210,8 @@ class Download_file(QWidget):
         ax[0,0].set_xlabel("Колличество входов")
         #ax[0,0].set_ylabel("45")
 
+        
+
         # График посешаемости кусов студентами по популярности на платформе Мудл
         list_score_1 = []
         type_lesson = set(type_lesson)
