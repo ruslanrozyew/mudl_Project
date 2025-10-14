@@ -225,7 +225,7 @@ class Download_file(QWidget):
         x1 = type_lesson
         y1 = list_score_1
         ax[1, 1].set_title("Популярность разделов курса")
-        ax[1, 1].barh(x1, y1)
+        ax[1,1].pie(list_score_1, labels=type_lesson)
         ax[1, 1].grid()
 
         ax[1, 0].set_visible(False) # скрыли с видимости график ax[1, 0]
