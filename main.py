@@ -224,7 +224,7 @@ class Download_file(QWidget):
 
         x1 = type_lesson
         y1 = list_score_1
-        ax[1, 1].set_title("График популярности курсов")
+        ax[1, 1].set_title("Популярность разделов курса")
         ax[1, 1].barh(x1, y1)
         ax[1, 1].grid()
 
