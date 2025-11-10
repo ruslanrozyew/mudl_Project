@@ -21,7 +21,7 @@ def list_directory_contents(directory):
     return login
 # указываем директорию папки проекта с файлами
 login_list = list_directory_contents("C:\\moodle project")
-# print(login_list)
+print(login_list)
 
 
 class MainWindow(QMainWindow):
@@ -243,7 +243,7 @@ class Download_file(QWidget):
         self.a = ""
 
     def delete_name(self):
-        teachers_list = []  # тут будет список отмеченных названий
+        teachers_list = []  # тут будет список отмеченных имен
         for i in range(self.list_widget.count()):
             item = self.list_widget.item(i)
             if item.checkState() == Qt.CheckState.Checked:
@@ -305,6 +305,14 @@ class Download_file(QWidget):
                 item.setCheckState(Qt.CheckState.Unchecked)  # по умолчанию чекбокс не отмечен
                 self.list_widget.addItem(item)  # добавляем элемент в список
         print(self.f)
+        #print(self.file_list)
+        time = [] ; name = []
+        for i in self.file_list:
+            time.append(i[1])
+            name.append(i[2])
+        print(time)
+        print(name)
+
 
 
 # Открытие окна при нажатие на кнопку Выбрать сткдента
