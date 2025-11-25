@@ -5,6 +5,7 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QWidget, QVB
 from PyQt6.QtGui import QPixmap
 import matplotlib.pyplot as plt
 from PyQt6.QtCore import Qt
+from datetime import datetime, timedelta
 
 def list_directory_contents(directory):
     login = []
@@ -22,7 +23,6 @@ def list_directory_contents(directory):
 # указываем директорию папки проекта с файлами
 login_list = list_directory_contents("C:\\moodle project")
 print(login_list)
-
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -201,8 +201,8 @@ class Download_file(QWidget):
                     surname = ""
                     break
 
-        f, ax = plt.subplots(2,2)
-        f.set_size_inches(10,8)
+        f, ax = plt.subplots(3,2)
+        f.set_size_inches(10,12)
         x = check_list_name_surname
         y = list_score
         ax[0,0].barh(x, y) ; ax[0,0].grid()
@@ -224,17 +224,94 @@ class Download_file(QWidget):
 
         x1 = type_lesson
         y1 = list_score_1
-        ax[1, 1].set_title("Популярность разделов курса")
-        ax[1,1].pie(list_score_1, labels=type_lesson)
+        #ax[1, 1].set_title("Популярность разделов курса")
+        #ax[1,1].pie(list_score_1, labels=type_lesson)
+        #ax[1, 1].grid()
+
+        ax[1, 1].barh(type_lesson, list_score_1, color="g");
         ax[1, 1].grid()
+        ax[1, 1].set_title("Популярность разделов курса")
 
         ax[1, 0].set_visible(False) # скрыли с видимости график ax[1, 0]
+        ax[2, 0].set_visible(False)  # скрыли с видимости график ax[2, 0]
+        ax[0, 1].set_visible(False)  # скрыли с видимости график ax[0, 1]
 
-        plt.savefig('C:\\moodle project\\my_sine_plot.pdf')   # сохранение графика в пдф формате в (C:/Games)
+        times = [];
+        names = []
+
+        def parse_data(times_list, names_list):
+            if len(times_list) != len(names_list):
+                raise ValueError("Списки времени и имен должны быть одинаковой длины")
+            entries = []
+            for i in range(len(times_list)):
+                time_str = times_list[i].strip()
+                name = names_list[i].strip()
+                if not time_str or not name:
+                    continue
+                try:
+                    # Преобразуем строку времени в объект time
+                    time_obj = datetime.strptime(time_str, '%H:%M:%S').time()
+                    entries.append((time_obj, name))
+                except ValueError as e:
+                    print(f"Ошибка преобразования времени '{time_str}': {e}")
+                    continue
+            return entries
+        def calculate_session_time(entries, session_threshold=300):
+            """Вычисляет общее время сессий для каждого пользователя"""
+            if not entries:
+                return {}
+            sorted_entries = sorted(entries, key=lambda x: x[0], reverse=True)
+            user_sessions = {}
+            for time_obj, name in sorted_entries:
+                if name not in user_sessions:
+                    user_sessions[name] = []
+                current_dt = datetime.combine(datetime.today(), time_obj)
+                if not user_sessions[name]:
+                    # Первая запись для пользователя
+                    user_sessions[name].append([current_dt, current_dt])
+                else:
+                    last_session = user_sessions[name][-1]
+                    time_diff = (last_session[0] - current_dt).total_seconds()
+                    if time_diff <= session_threshold:
+                        # Обновляем начало сессии
+                        last_session[0] = current_dt
+                    else:
+                        # Новая сессия
+                        user_sessions[name].append([current_dt, current_dt])
+            total_time = {}
+            for name, sessions in user_sessions.items():
+                total_seconds = sum(
+                    (session[1] - session[0]).total_seconds()
+                    for session in sessions
+                )
+                total_time[name] = timedelta(seconds=total_seconds)
+
+            return total_time
+        # print(self.file_list)
+        for i in self.file_list:
+            times.append(i[1])
+            names.append(i[2])
+
+        # Обработка данных
+        entries = parse_data(times, names)
+        result = calculate_session_time(entries)
+
+        names_for_grafic = []
+        times_for_grafic = []
+
+        for user, duration in result.items():
+            names_for_grafic.append(user)
+            times_for_grafic.append(duration)
+
+
+        print(names_for_grafic, "имя")
+        print(times_for_grafic, "время")
+
+        #ax[2, 1].barh(names_for_grafic, times_for_grafic, color="g");
+        #ax[2, 1].grid()
+
+        plt.savefig('C:\\moodle project\\my_sine_plot.pdf')   # сохранение графика в пдф формате в (C:/moodle project)
         plt.show()
-        #print(list_score_1)
-        #print(type_lesson)
-
 
     def Button_backk(self):
         self.list_widget.clear()
@@ -305,17 +382,10 @@ class Download_file(QWidget):
                 item.setCheckState(Qt.CheckState.Unchecked)  # по умолчанию чекбокс не отмечен
                 self.list_widget.addItem(item)  # добавляем элемент в список
         print(self.f)
-        #print(self.file_list)
-        time = [] ; name = []
-        for i in self.file_list:
-            time.append(i[1])
-            name.append(i[2])
-        print(time)
-        print(name)
 
 
 
-# Открытие окна при нажатие на кнопку Выбрать сткдента
+# Открытие окна при нажатие на кнопку Выбрать студента
 class Check_student_window(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -342,6 +412,7 @@ class Check_student_window(QMainWindow):
 
     def on_item_selected(self, item):
         self.label.setText(f"Выбран: {item.text()}")
+
 
 # открытие окна при нажатие на кнопку Фильтровать файл
 class Filtared_file(QWidget):
